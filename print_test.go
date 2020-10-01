@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	p "github.com/githomework/apps-util-print"
+	p "github.com/githomework/apps-util-printing"
 )
 
 func TestNetworkNames(t *testing.T) {
