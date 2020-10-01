@@ -1,4 +1,4 @@
-package print_test
+package printing_test
 
 import (
 	"fmt"
@@ -8,6 +8,7 @@ import (
 )
 
 func TestNetworkNames(t *testing.T) {
+
 	for k, v := range p.NetworkPrinters() {
 		fmt.Println(k, v)
 	}

@@ -1,9 +1,8 @@
-package print
+package printing
 
 import (
 	"io/ioutil"
 
-	"os/exec"
 	"strings"
 
 	"github.com/alexbrainman/printer"
@@ -14,18 +13,23 @@ var (
 )
 
 func init() {
+
 	networkNames = map[string]string{}
 
-	output, _ := exec.Command("powershell", "Get-Printer", "|", "select", "-exp", "name").Output()
+	/*	output, _ := exec.Command("powershell", "Get-Printer", "|", "select", "-exp", "name").Output()
+		names := strings.Split(strings.ToLower(string(output)), "\n")
+	*/
 
-	names := strings.Split(strings.ToLower(string(output)), "\n")
+	names, _ := printer.ReadNames()
+
 	for _, v := range names {
+		v = strings.TrimSpace(v)
 		if len(v) > 2 && v[0:2] == "\\\\" {
-
+			v = strings.ToLower(v)
 			parts := strings.Split(v, "\\")
 			parts = strings.Fields(parts[len(parts)-1])
-			networkNames[parts[0]] = strings.TrimSpace(v)
-			networkNames[strings.ToUpper(parts[0])] = strings.TrimSpace(v)
+			networkNames[parts[0]] = v
+			networkNames[strings.ToUpper(parts[0])] = v
 
 		}
 
@@ -52,6 +56,7 @@ func printDocument(printerName, documentName string, output []byte) error {
 	}
 
 	p.Write(output)
+	printer.ReadNames()
 
 	return p.EndPage()
 }
