@@ -56,7 +56,7 @@ func printDocument(printerName, documentName string, output []byte) error {
 	return p.EndPage()
 }
 
-func Print(printerName string, path string, tryNetworkQueue bool) error {
+func PrintFile(printerName string, path string, tryNetworkQueue bool) error {
 	if printerName == "" || printerName == "dummy" {
 		return nil
 	}
@@ -72,6 +72,25 @@ func Print(printerName string, path string, tryNetworkQueue bool) error {
 	}
 
 	err = printDocument(printerName, path, output)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func PrintBytes(printerName string, document string, buf []byte, tryNetworkQueue bool) error {
+	if printerName == "" || printerName == "dummy" {
+		return nil
+	}
+	if tryNetworkQueue {
+		n := networkNames[printerName]
+		if n != "" {
+			printerName = n
+		}
+	}
+
+	err := printDocument(printerName, document, buf)
 	if err != nil {
 		return err
 	}
